@@ -4,7 +4,7 @@ import sys
 
 hs_baseline = {}
 
-with open('hs_baseline.csv', 'r') as csvfile:
+with open('hs_baseline.tsv', 'r') as csvfile:
     csv_reader = csv.reader(csvfile, delimiter='\t')
     for row in csv_reader:
         hs_baseline[row[0].upper()] = int(row[1])
@@ -20,24 +20,35 @@ def hs_driver(input):
     parsed_input = input.split()
     return hs(parsed_input[0].upper(), int(parsed_input[1]))
 
+def mode_arg(text):
+    input_txt = text
+    result = hs_driver(input_txt)
+    pp.PrettyPrinter(width=20).pprint(result)
+
+def mode_debug():
+    mode_arg("ac 134")
+    print() # eye break
+    mode_arg("ac 135")
+    print() # eye break
+    mode_arg("ac 132")
+
+def mode_single():
+    input_txt = input("enter roon to convert: ")
+    mode_arg(input_txt)
+
+
 def mode_default():
     while True:
         input_txt = input("enter roon to convert: ")
         result = hs_driver(input_txt)
         pp.PrettyPrinter(width=20).pprint(result)
 
-def mode_test(text):
-    input_txt = text
-    result = hs_driver(input_txt)
-    pp.PrettyPrinter(width=20).pprint(result)
-
-def mode_debug():
-    mode_test("ac 134")
-    mode_test("ac 135")
-    mode_test("ac 132")
-
 if __name__ == "__main__":
-    if sys.argv[1] == '1':
+    if len(sys.argv) == 1:
+        mode_single()
+    elif sys.argv[1] == '1':
         mode_debug()
-    else:
+    elif sys.argv[1] == '0':
         mode_default()
+    else:
+        mode_single()
